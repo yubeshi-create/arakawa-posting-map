@@ -1,0 +1,30 @@
+{
+    "1": {
+        "area_name": "荒川",
+        "area_cho_max_number": "7"
+    },
+    "2": {
+        "area_name": "西尾久",
+        "area_cho_max_number": "8"
+    },
+    "3": {
+        "area_name": "東尾久",
+        "area_cho_max_number": "9"
+    },
+    "4": {
+        "area_name": "町屋",
+        "area_cho_max_number": "8"
+    },
+    "5": {
+        "area_name": "西日暮里",
+        "area_cho_max_number": "6"
+    },
+    "6": {
+        "area_name": "東日暮里",
+        "area_cho_max_number": "6"
+    },
+    "7": {
+        "area_name": "南千住",
+        "area_cho_max_number": "8"
+    }
+}
