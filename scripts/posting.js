@@ -572,3 +572,4 @@ Promise.all([getPostingList(), getPostingProgress()]).then(function(res) {
   
 }).catch((error) => {
   console.error('データ読み込みエラー:', error);
+});
