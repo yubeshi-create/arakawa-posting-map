@@ -1,4 +1,10 @@
-const map = L.map("map").setView([35.7362, 139.7831], 13); // 中心は荒川区
+const map = L.map("map", {
+  // ピンチローテーション機能を有効化
+  touchRotate: true,
+  rotateControl: {
+    closeOnZeroBearing: false
+  }
+}).setView([35.7362, 139.7831], 13);　　　// 中心は荒川区
 
 // 背景地図はOpenStreetMap
 const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -7,8 +13,7 @@ const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Linked Open Addresses Japan',
 }).addTo(map);
 
-// 地図回転機能を追加
-let currentRotation = 0;
+// 現在地関連の変数
 let currentLocationMarker = null;
 let watchPositionId = null;
 
@@ -25,21 +30,84 @@ const currentLocationIcon = L.icon({
   popupAnchor: [0, -12]
 });
 
-// 回転・現在地ボタンを追加
-const controlButtons = L.Control.extend({
+// カスタムタッチ回転ハンドラー
+let touchRotateHandler = {
+  startAngle: 0,
+  currentRotation: 0,
+  
+  enable: function() {
+    // タッチイベントのリスナーを追加
+    map.getContainer().addEventListener('touchstart', this.onTouchStart.bind(this), { passive: false });
+    map.getContainer().addEventListener('touchmove', this.onTouchMove.bind(this), { passive: false });
+    map.getContainer().addEventListener('touchend', this.onTouchEnd.bind(this), { passive: false });
+  },
+  
+  onTouchStart: function(e) {
+    if (e.touches.length === 2) {
+      this.startAngle = this.getAngle(e.touches[0], e.touches[1]);
+      e.preventDefault();
+    }
+  },
+  
+  onTouchMove: function(e) {
+    if (e.touches.length === 2) {
+      const currentAngle = this.getAngle(e.touches[0], e.touches[1]);
+      const deltaAngle = currentAngle - this.startAngle;
+      
+      // 回転角度を更新
+      this.currentRotation += deltaAngle;
+      this.applyRotation(this.currentRotation);
+      
+      this.startAngle = currentAngle;
+      e.preventDefault();
+    }
+  },
+  
+  onTouchEnd: function(e) {
+    if (e.touches.length < 2) {
+      // 回転操作終了
+    }
+  },
+  
+  getAngle: function(touch1, touch2) {
+    const deltaY = touch2.clientY - touch1.clientY;
+    const deltaX = touch2.clientX - touch1.clientX;
+    return Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+  },
+  
+  applyRotation: function(angle) {
+    const mapContainer = map.getContainer();
+    mapContainer.style.transform = `rotate(${angle}deg)`;
+    mapContainer.style.transformOrigin = 'center';
+    console.log(`地図回転: ${angle.toFixed(1)}度`);
+  },
+  
+  reset: function() {
+    this.currentRotation = 0;
+    this.applyRotation(0);
+    console.log('地図回転リセット');
+  }
+};
+
+// タッチ回転を有効化
+touchRotateHandler.enable();
+
+// 現在地・リセットボタンのみのコントロール
+const locationControl = L.Control.extend({
   onAdd: function(map) {
     const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
     
-    // 現在地ボタン（最上部）
+    // 現在地ボタン
     const locationBtn = L.DomUtil.create('button', '', container);
     locationBtn.innerHTML = '📍';
     locationBtn.style.backgroundColor = 'white';
     locationBtn.style.border = '2px solid rgba(0,0,0,0.2)';
-    locationBtn.style.width = '40px';
-    locationBtn.style.height = '40px';
-    locationBtn.style.fontSize = '16px';
+    locationBtn.style.width = '50px';
+    locationBtn.style.height = '50px';
+    locationBtn.style.fontSize = '20px';
     locationBtn.style.cursor = 'pointer';
     locationBtn.style.display = 'block';
+    locationBtn.style.marginBottom = '5px';
     locationBtn.title = '現在地を表示';
     
     // 現在地追跡ボタン
@@ -47,45 +115,22 @@ const controlButtons = L.Control.extend({
     trackBtn.innerHTML = '🎯';
     trackBtn.style.backgroundColor = 'white';
     trackBtn.style.border = '2px solid rgba(0,0,0,0.2)';
-    trackBtn.style.width = '40px';
-    trackBtn.style.height = '40px';
-    trackBtn.style.fontSize = '16px';
+    trackBtn.style.width = '50px';
+    trackBtn.style.height = '50px';
+    trackBtn.style.fontSize = '20px';
     trackBtn.style.cursor = 'pointer';
     trackBtn.style.display = 'block';
+    trackBtn.style.marginBottom = '5px';
     trackBtn.title = '現在地を追跡';
-    
-    // 左回転ボタン
-    const leftBtn = L.DomUtil.create('button', '', container);
-    leftBtn.innerHTML = '↺';
-    leftBtn.style.backgroundColor = 'white';
-    leftBtn.style.border = '2px solid rgba(0,0,0,0.2)';
-    leftBtn.style.width = '40px';
-    leftBtn.style.height = '40px';
-    leftBtn.style.fontSize = '18px';
-    leftBtn.style.cursor = 'pointer';
-    leftBtn.style.display = 'block';
-    leftBtn.title = '左回転';
-    
-    // 右回転ボタン
-    const rightBtn = L.DomUtil.create('button', '', container);
-    rightBtn.innerHTML = '↻';
-    rightBtn.style.backgroundColor = 'white';
-    rightBtn.style.border = '2px solid rgba(0,0,0,0.2)';
-    rightBtn.style.width = '40px';
-    rightBtn.style.height = '40px';
-    rightBtn.style.fontSize = '18px';
-    rightBtn.style.cursor = 'pointer';
-    rightBtn.style.display = 'block';
-    rightBtn.title = '右回転';
     
     // リセットボタン
     const resetBtn = L.DomUtil.create('button', '', container);
     resetBtn.innerHTML = '⚹';
     resetBtn.style.backgroundColor = 'white';
     resetBtn.style.border = '2px solid rgba(0,0,0,0.2)';
-    resetBtn.style.width = '40px';
-    resetBtn.style.height = '40px';
-    resetBtn.style.fontSize = '18px';
+    resetBtn.style.width = '50px';
+    resetBtn.style.height = '50px';
+    resetBtn.style.fontSize = '20px';
     resetBtn.style.cursor = 'pointer';
     resetBtn.style.display = 'block';
     resetBtn.title = '北を上に戻す';
@@ -101,19 +146,9 @@ const controlButtons = L.Control.extend({
       toggleLocationTracking();
     });
     
-    leftBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      rotateMap(-45);
-    });
-    
-    rightBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      rotateMap(45);
-    });
-    
     resetBtn.addEventListener('click', function(e) {
       e.stopPropagation();
-      resetRotation();
+      touchRotateHandler.reset();
     });
     
     return container;
@@ -264,29 +299,17 @@ function toggleLocationTracking() {
   }
 }
 
-// 地図回転関数
-function rotateMap(degrees) {
-  currentRotation += degrees;
-  if (currentRotation >= 360) currentRotation -= 360;
-  if (currentRotation < 0) currentRotation += 360;
-  
-  const mapContainer = map.getContainer();
-  mapContainer.style.transform = `rotate(${currentRotation}deg)`;
-  mapContainer.style.transformOrigin = 'center';
-  
-  console.log(`地図回転: ${currentRotation}度`);
-}
-
-// 回転リセット関数
-function resetRotation() {
-  currentRotation = 0;
-  const mapContainer = map.getContainer();
-  mapContainer.style.transform = 'rotate(0deg)';
-  console.log('地図回転リセット');
-}
-
 // コントロールを地図に追加
-map.addControl(new controlButtons({ position: 'topleft' }));
+map.addControl(new locationControl({ position: 'topleft' }));
+
+// 操作ガイドを表示
+setTimeout(() => {
+  console.log('📱 操作方法:');
+  console.log('• 2本指で地図を回転できます');
+  console.log('• 📍 現在地を表示');
+  console.log('• 🎯 現在地を追跡');
+  console.log('• ⚹ 北を上に戻す');
+}, 1000);
 
 // 以下は既存のコード（凡例、色分け、データ読み込み）
 function legend() {
@@ -363,7 +386,7 @@ function getGeoJsonStyleIsWorking(){
 let areaList;
 let progress;
 
-console.log('荒川区ポスティングマップ読み込み開始（現在地・回転機能付き）');
+console.log('荒川区ポスティングマップ読み込み開始（ピンチローテーション対応）');
 
 Promise.all([getPostingList(), getPostingProgress()]).then(function(res) {
   areaList = res[0];
@@ -395,11 +418,9 @@ Promise.all([getPostingList(), getPostingProgress()]).then(function(res) {
       let cho_number = cho_index + 1;
       let geoJsonUrl;
       
-      // 丁がない場合
       if(cho_max_number === 1){
         geoJsonUrl = `https://uedayou.net/loa/東京都荒川区${areaInfo['area_name']}.geojson`;
       } else {
-        // 丁が1丁目2丁目・・・とある場合
         geoJsonUrl = `https://uedayou.net/loa/東京都荒川区${areaInfo['area_name']}${cho_number}丁目.geojson`;
       }
       
