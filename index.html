@@ -3,23 +3,555 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>メニュー | 荒川区ポスティングマップ | 南貴大</title>
+    <title>荒川区ポスティングマップ | 南貴大 - 再生の道</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+      :root {
+        --primary-purple: #8b3f9e;
+        --secondary-purple: #b565d8;
+        --light-purple: #e6d7ff;
+        --dark-purple: #5d2a6e;
+        --gradient-primary: linear-gradient(135deg, #8b3f9e 0%, #b565d8 100%);
+        --gradient-light: linear-gradient(135deg, #f8f4ff 0%, #e6d7ff 100%);
+      }
+
+      body {
+        background: var(--gradient-light);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .header-section {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(139, 63, 158, 0.3);
+      }
+
+      .profile-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 4px solid white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      }
+
+      .stats-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 8px 25px rgba(139, 63, 158, 0.15);
+        border: 1px solid rgba(139, 63, 158, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(139, 63, 158, 0.25);
+      }
+
+      .stats-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--primary-purple);
+        margin-bottom: 0.5rem;
+      }
+
+      .stats-label {
+        color: #666;
+        font-weight: 500;
+      }
+
+      .progress-bar-custom {
+        height: 12px;
+        border-radius: 10px;
+        background: #f0f0f0;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: var(--gradient-primary);
+        border-radius: 10px;
+        transition: width 0.8s ease;
+      }
+
+      .filter-section {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 25px rgba(139, 63, 158, 0.15);
+        border: 1px solid rgba(139, 63, 158, 0.1);
+      }
+
+      .filter-btn {
+        background: var(--light-purple);
+        border: 2px solid var(--secondary-purple);
+        color: var(--dark-purple);
+        border-radius: 25px;
+        padding: 0.5rem 1.5rem;
+        margin: 0.25rem;
+        transition: all 0.3s ease;
+        font-weight: 500;
+      }
+
+      .filter-btn:hover {
+        background: var(--secondary-purple);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .filter-btn.active {
+        background: var(--gradient-primary);
+        color: white;
+        border-color: var(--primary-purple);
+      }
+
+      .action-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 8px 25px rgba(139, 63, 158, 0.15);
+        border: 1px solid rgba(139, 63, 158, 0.1);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+
+      .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(139, 63, 158, 0.25);
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .action-icon {
+        width: 60px;
+        height: 60px;
+        background: var(--gradient-primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .brand-logo {
+        max-width: 150px;
+        height: auto;
+      }
+
+      .section-title {
+        color: var(--dark-purple);
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+      }
+
+      .external-link {
+        color: var(--secondary-purple);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .external-link:hover {
+        color: var(--primary-purple);
+      }
+
+      .area-list {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        background: #fafafa;
+      }
+
+      .area-item {
+        padding: 0.75rem 1rem;  
+        border-bottom: 1px solid #e8e8e8;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.2s ease;
+      }
+
+      .area-item:hover {
+        background-color: rgba(139, 63, 158, 0.05);
+      }
+
+      .area-item:last-child {
+        border-bottom: none;
+      }
+
+      .area-name {
+        font-weight: 500;
+        color: var(--dark-purple);
+      }
+
+      .area-details {
+        font-size: 0.85rem;
+        color: #666;
+      }
+
+      .progress-badge {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .progress-badge.not-started {
+        background: #6c757d;
+      }
+
+      .progress-badge.in-progress {
+        background: linear-gradient(135deg, #ffc107 0%, #ff8c00 100%);
+      }
+
+      .progress-badge.completed {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      }
+
+      .area-count {
+        background: var(--light-purple);
+        color: var(--dark-purple);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: inline-block;
+      }
+
+      @media (max-width: 768px) {
+        .header-section {
+          padding: 2rem 0;
+        }
+        
+        .stats-number {
+          font-size: 2rem;
+        }
+        
+        .profile-image {
+          width: 60px;
+          height: 60px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div class="container-sm my-5">
-      
-      <div class="col-lg-12 px-0">
-        <h3 class="mb-4">荒川区ポスティングマップ（荒川区全域）</h3>
-        <div class="list-group mb-4">
-          <a href="./posting" class="list-group-item list-group-item-action">ポスティング進捗率確認</a>
-        </div>
-        <div>
-          <a href="https://go2senkyo.com/seijika/195818" target="_blank" rel="noopener noreferrer" class="link-secondary">南貴大 選挙ドットコムページ</a>
+    <!-- ヘッダーセクション -->
+    <div class="header-section">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <div class="d-flex align-items-center mb-3">
+              <img src="minamitakahiro_icon.png" alt="南貴大" class="profile-image me-3">
+              <div>
+                <h1 class="mb-1">荒川区ポスティングマップ</h1>
+                <p class="mb-0 opacity-90">南貴大 - 再生の道 | 荒川区全域進捗管理</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 text-md-end">
+            <div class="d-inline-block">
+              <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiByeD0iMjAiIGZpbGw9InVybCgjZ3JhZGllbnQwKSIvPgo8cGF0aCBkPSJNMjAgODBMMzAgMjBMODAgMzBMNzAgODBMMjAgODBaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjkiLz4KPGR0ZmM+CjxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZGllbnQwIiB4MT0iMCIgeTE9IjAiIHgyPSIxMDAiIHkyPSIxMDAiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzhiM2Y5ZSIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNiNTY1ZDgiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8L3N2Zz4K" alt="再生の道" class="brand-logo">
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    <div class="container">
+      <!-- 進捗統計カード -->
+      <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+          <div class="stats-card text-center">
+            <div class="stats-number" id="totalAreas">52</div>
+            <div class="stats-label">総エリア数</div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="stats-card text-center">
+            <div class="stats-number" id="completedAreas">0</div>
+            <div class="stats-label">完了エリア数</div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="stats-card text-center">
+            <div class="stats-number" id="progressRate">0.0%</div>
+            <div class="stats-label">進捗率</div>
+            <div class="progress-bar-custom mt-3">
+              <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- エリア一覧表示機能 -->
+      <div class="filter-section">
+        <h4 class="section-title">
+          <i class="fas fa-list me-2"></i>進捗別エリア一覧
+        </h4>
+        <div class="text-center mb-4">
+          <button class="btn filter-btn active" data-filter="all">
+            <i class="fas fa-list me-1"></i>すべて表示
+          </button>
+          <button class="btn filter-btn" data-filter="not-started">
+            <i class="fas fa-circle me-1"></i>未着手 (0%)
+          </button>
+          <button class="btn filter-btn" data-filter="in-progress">
+            <i class="fas fa-play-circle me-1"></i>進行中 (1-99%)
+          </button>
+          <button class="btn filter-btn" data-filter="completed">
+            <i class="fas fa-check-circle me-1"></i>完了 (100%)
+          </button>
+        </div>
+        
+        <!-- エリアリスト表示部分 -->
+        <div id="areaListContainer" class="mt-3">
+          <div class="text-muted text-center py-3">
+            <i class="fas fa-arrow-up me-2"></i>
+            上のボタンを選択するとエリア一覧が表示されます
+          </div>
+        </div>
+      </div>
+
+      <!-- アクション -->
+      <div class="row mb-4">
+        <div class="col-lg-8 mb-3">
+          <a href="./posting" class="action-card">
+            <div class="action-icon">
+              <i class="fas fa-map"></i>
+            </div>
+            <h5 class="mb-2">ポスティング進捗マップ</h5>
+            <p class="text-muted mb-0">荒川区全域の進捗状況を地図で確認・管理できます</p>
+          </a>
+        </div>
+        <div class="col-lg-4 mb-3">
+          <div class="stats-card">
+            <h6 class="mb-3">
+              <i class="fas fa-clock me-2"></i>最終更新
+            </h6>
+            <p class="mb-1" id="lastUpdate">2025年5月26日</p>
+            <small class="text-muted">進捗データ更新日時</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- 外部リンク -->
+      <div class="text-center">
+        <a href="https://go2senkyo.com/seijika/195818" target="_blank" rel="noopener noreferrer" class="external-link">
+          <i class="fas fa-external-link-alt me-1"></i>
+          南貴大 選挙ドットコムページ
+        </a>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="scripts/common.js"></script>
+    <script>
+      // 進捗データを取得して表示を更新
+      let allAreaData = {}; // 全エリアデータを保存
+
+      async function updateStats() {
+        try {
+          const areaList = await getPostingList();
+          const progress = await getPostingProgress();
+          
+          // 全エリアデータを構築
+          allAreaData = buildAreaData(areaList, progress);
+          
+          // 統計表示を更新
+          let totalAreas = 0;
+          let completedAreas = 0;
+          
+          Object.values(allAreaData).forEach(area => {
+            totalAreas++;
+            if (area.progress === 1.0) completedAreas++;
+          });
+          
+          const progressRate = totalAreas > 0 ? (completedAreas / totalAreas) * 100 : 0;
+          
+          document.getElementById('totalAreas').textContent = totalAreas;
+          document.getElementById('completedAreas').textContent = completedAreas;
+          document.getElementById('progressRate').textContent = progressRate.toFixed(1) + '%';
+          document.getElementById('progressBar').style.width = progressRate + '%';
+          
+          // 最終更新日時を設定
+          document.getElementById('lastUpdate').textContent = new Date().toLocaleDateString('ja-JP', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+          
+        } catch (error) {
+          console.error('進捗データの取得に失敗しました:', error);
+          // エラー時はデフォルト値を表示
+          document.getElementById('totalAreas').textContent = '52';
+          document.getElementById('completedAreas').textContent = '0';
+          document.getElementById('progressRate').textContent = '0.0%';
+        }
+      }
+
+      // エリアデータを構築
+      function buildAreaData(areaList, progress) {
+        const areaData = {};
+        
+        for (let [key, areaInfo] of Object.entries(areaList)) {
+          let cho_max_number = Number(areaInfo['area_cho_max_number']);
+          
+          for(let cho_index = 0; cho_index < cho_max_number; cho_index++){
+            let cho_number = cho_index + 1;
+            const progressIndex = cho_max_number === 1 ? 0 : cho_index;
+            
+            const areaName = cho_max_number === 1 ? 
+              areaInfo['area_name'] : 
+              `${areaInfo['area_name']}${cho_number}丁目`;
+            
+            const progressValue = progress[key] ? progress[key]["progresses"][progressIndex] : 0;
+            const executer = progress[key] ? progress[key]["executer"][progressIndex] : '未割当';
+            const postingDate = progress[key] ? progress[key]["posting_date"][progressIndex] : '未定';
+            
+            areaData[areaName] = {
+              name: areaName,
+              progress: progressValue,
+              executer: executer,
+              postingDate: postingDate,
+              isWorking: progress[key] ? progress[key]["is_working"][progressIndex] : false
+            };
+          }
+        }
+        
+        return areaData;
+      }
+
+      // エリアリストを表示
+      function displayAreaList(filter) {
+        const container = document.getElementById('areaListContainer');
+        
+        // フィルターに応じてエリアを抽出
+        let filteredAreas = [];
+        
+        Object.values(allAreaData).forEach(area => {
+          switch(filter) {
+            case 'not-started':
+              if (area.progress === 0) filteredAreas.push(area);
+              break;
+            case 'in-progress':
+              if (area.progress > 0 && area.progress < 1.0) filteredAreas.push(area);
+              break;
+            case 'completed':
+              if (area.progress === 1.0) filteredAreas.push(area);
+              break;
+            default: // 'all'
+              filteredAreas.push(area);
+          }
+        });
+
+        // エリア名でソート
+        filteredAreas.sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+
+        if (filteredAreas.length === 0) {
+          container.innerHTML = `
+            <div class="text-muted text-center py-4">
+              <i class="fas fa-search me-2"></i>
+              該当するエリアがありません
+            </div>
+          `;
+          return;
+        }
+
+        // ヘッダー部分
+        let html = `
+          <div class="area-count">
+            <i class="fas fa-map-marker-alt me-2"></i>
+            ${filteredAreas.length}件のエリア
+          </div>
+          <div class="area-list">
+        `;
+
+        // エリアリスト
+        filteredAreas.forEach(area => {
+          const progressPercent = (area.progress * 100).toFixed(1);
+          let badgeClass = 'not-started';
+          let badgeText = `${progressPercent}%`;
+          
+          if (area.progress === 0) {
+            badgeClass = 'not-started';
+            badgeText = '未着手';
+          } else if (area.progress < 1.0) {
+            badgeClass = 'in-progress';
+            badgeText = `${progressPercent}%`;
+          } else {
+            badgeClass = 'completed';
+            badgeText = '完了';
+          }
+
+          html += `
+            <div class="area-item">
+              <div>
+                <div class="area-name">${area.name}</div>
+                <div class="area-details">
+                  担当: ${area.executer} | 実施予定: ${area.postingDate}
+                </div>
+              </div>
+              <div class="progress-badge ${badgeClass}">
+                ${badgeText}
+              </div>
+            </div>
+          `;
+        });
+
+        html += '</div>';
+        container.innerHTML = html;
+      }
+
+      // フィルターボタンの機能
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          // アクティブ状態を切り替え
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          
+          const filter = this.dataset.filter;
+          
+          // エリアリストを表示
+          displayAreaList(filter);
+          
+          // フィルター情報をローカルストレージに保存（地図ページで使用）
+          localStorage.setItem('progressFilter', filter);
+        });
+      });
+
+      // ページ読み込み時に統計を更新
+      document.addEventListener('DOMContentLoaded', function() {
+        updateStats().then(() => {
+          // 初期表示（すべて表示）
+          displayAreaList('all');
+        });
+        
+        // 保存されたフィルターがあれば復元
+        const savedFilter = localStorage.getItem('progressFilter');
+        if (savedFilter && savedFilter !== 'all') {
+          const filterBtn = document.querySelector(`[data-filter="${savedFilter}"]`);
+          if (filterBtn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            filterBtn.classList.add('active');
+            // 少し遅延させてデータ読み込み後に実行
+            setTimeout(() => displayAreaList(savedFilter), 500);
+          }
+        }
+      });
+    </script>
   </body>
 </html>
