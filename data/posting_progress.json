@@ -4,13 +4,13 @@
     "_comment_progresses": "進捗率(0.0～1)。0%は0.0,100%は1.0",
     "progresses": [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
     "_comment_is_working": "投函予定→true,それ以外→false",
-    "is_working": [false, false, false, false, true, false, false],
+    "is_working": [false, true, false, true, true, false, true],
     "_comment_posting_date": "投函日。[\"25年2月1日\", \"25年3月1日,25年3月10日\"]のように記入",
     "posting_date": ["", "", "25年5月26日", "", "", "", ""],
     "_comment_executer": "作業者。[\"荒川太郎\", \"尾久花子,町屋次郎\"]のように記入", 
-    "executer": ["", "", "柴さん", "", "しぶたにさん", "", ""],
+    "executer": ["", "柴さん", "柴さん", "柴さん", "しぶたにさん", "", "柴さん"],
     "_comment_notes": "備考欄",
-    "notes": ["", "", "99.9%完了", "", "予定", "", ""]
+    "notes": ["", "実施予定", "99.9%完了", "実施予定", "実施予定", "", "実施予定"]
   },
   "2": {
     "_comment": "西尾久1~8丁目",
@@ -46,11 +46,11 @@
   },
   "6": {
     "_comment": "東日暮里1~6丁目",
-    "progresses": [0.3, 0.0, 0.0, 0.0, 0.0, 0.5],
+    "progresses": [0.3, 0.0, 0.0, 0.0, 1.0, 0.5],
     "is_working": [false, false, false, true, true, false],
     "posting_date": ["", "", "", "", "", ""],
     "executer": ["柴さん", "", "", "やよいさん", "やよいさん", "柴さん"],
-    "notes": ["実施中", "", "", "今週（5/26週）実施予定", "今週（5/26週）実施予定", "実施中"]
+    "notes": ["実施中", "", "", "今週（5/26週）実施予定", "完了", "実施中"]
   },
   "7": {
     "_comment": "南千住1~8丁目",
