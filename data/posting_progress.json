@@ -46,11 +46,11 @@
   },
   "6": {
     "_comment": "東日暮里1~6丁目",
-    "progresses": [0.3, 0.0, 0.0, 0.0, 1.0, 0.5],
-    "is_working": [false, false, false, true, true, false],
+    "progresses": [0.3, 0.0, 0.0, 0.4, 1.0, 0.5],
+    "is_working": [false, false, false, false, true, false],
     "posting_date": ["", "", "", "", "", ""],
     "executer": ["柴さん", "", "", "やよいさん", "やよいさん", "柴さん"],
-    "notes": ["実施中", "", "", "今週（5/26週）実施予定", "完了", "実施中"]
+    "notes": ["実施中", "", "", "実施中", "完了", "実施中"]
   },
   "7": {
     "_comment": "南千住1~8丁目",
